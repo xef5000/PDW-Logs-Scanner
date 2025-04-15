@@ -1,0 +1,10 @@
+C:\Users\romde\source\repos\Ottfires\Ottfires\bin\Debug\Ottfires.exe.config
+C:\Users\romde\source\repos\Ottfires\Ottfires\bin\Debug\Ottfires.exe
+C:\Users\romde\source\repos\Ottfires\Ottfires\bin\Debug\Ottfires.pdb
+C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\PDWLogsScanner.csproj.AssemblyReference.cache
+C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\Ottfires.Form1.resources
+C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\Ottfires.Properties.Resources.resources
+C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\PDWLogsScanner.csproj.GenerateResource.cache
+C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\PDWLogsScanner.csproj.CoreCompileInputs.cache
+C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\Ottfires.exe
+C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\Ottfires.pdb
