@@ -182,16 +182,33 @@ namespace Ottfires
             this.groupToken = manager.SecondVariable;
             appTokenTextBox.Text = this.appToken;
             groupTokenTextBox.Text = this.groupToken;
+
+            if (!string.IsNullOrEmpty(manager.SettingsVariable))
+            {
+                string[] states = manager.SettingsVariable.Split(',');
+                if (states.Length == 3)
+                {
+                    pocsag1CheckBox.Checked = bool.Parse(states[0]);
+                    pocsag2CheckBox.Checked = bool.Parse(states[1]);
+                    pocsag3CheckBox.Checked = bool.Parse(states[2]);
+                }
+            }
         }
 
         private void saveTokens()
         {
-            manager.SaveVariables(this.appToken, this.groupToken);
+            string settings = $"{pocsag1CheckBox.Checked},{pocsag2CheckBox.Checked},{pocsag3CheckBox.Checked}";
+            manager.SaveVariables(this.appToken, this.groupToken, settings);
         }
 
         private void groupTokenTextBox_TextChanged(object sender, EventArgs e)
         {
             this.groupToken = groupTokenTextBox.Text;
+            saveTokens();
+        }
+
+        private void pocsagCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
             saveTokens();
         }
 
@@ -204,7 +221,11 @@ namespace Ottfires
             if (size > lastSize)
             {
                 string newText = logs.Substring(lastSize - 1);
-                if (newText.Contains("POCSAG-3"))
+                List<string> activeProtocols = new List<string>();
+                if (pocsag1CheckBox.Checked) activeProtocols.Add("POCSAG-1");
+                if (pocsag2CheckBox.Checked) activeProtocols.Add("POCSAG-2");
+                if (pocsag3CheckBox.Checked) activeProtocols.Add("POCSAG-3");
+                if (activeProtocols.Any(p => newText.Contains(p)))
                 {
                     string pattern = @"512\s+(.*)$";
                     Match match = Regex.Match(newText, pattern);
@@ -226,6 +247,7 @@ namespace Ottfires
         // These will hold the variables in memory after loading
         private string _firstVariable; // Using nullable reference types (string?) is good practice in modern .NET
         private string _secondVariable;
+        private string _settingsVariable; // POCSAG settings
 
         // Path to the file used for storage
         private readonly string _filePath;
@@ -234,6 +256,7 @@ namespace Ottfires
         // Provide read-only access to the loaded variables
         public string FirstVariable => _firstVariable;
         public string SecondVariable => _secondVariable;
+        public string SettingsVariable => _settingsVariable;
 
         // --- Constructor ---
         /// <summary>
@@ -268,6 +291,7 @@ namespace Ottfires
             // Reset/default values before attempting to read
             _firstVariable = null;
             _secondVariable = null;
+            _settingsVariable = null;
             Console.WriteLine($"[VariableManager] Attempting to load variables from '{_filePath}'...");
 
             try
@@ -283,25 +307,9 @@ namespace Ottfires
                 string[] lines = File.ReadAllLines(_filePath);
 
                 // Assign lines to variables if they exist in the file
-                if (lines.Length >= 1)
-                {
-                    _firstVariable = lines[0];
-                    Console.WriteLine($"[VariableManager] Loaded FirstVariable.");
-                }
-                else
-                {
-                    Console.WriteLine($"[VariableManager] Warning: File is empty or missing first line. FirstVariable remains null.");
-                }
-
-                if (lines.Length >= 2)
-                {
-                    _secondVariable = lines[1];
-                    Console.WriteLine($"[VariableManager] Loaded SecondVariable.");
-                }
-                else if (lines.Length == 1) // Only print warning if second line specifically is missing
-                {
-                    Console.WriteLine($"[VariableManager] Warning: File has only one line. SecondVariable remains null.");
-                }
+                if (lines.Length >= 1) _firstVariable = lines[0];
+                if (lines.Length >= 2) _secondVariable = lines[1];
+                if (lines.Length >= 3) _settingsVariable = lines[2]; // Load 3rd line
                 // Ignore any lines beyond the second one in this simple implementation
             }
             // Catch specific exceptions related to file access
@@ -324,13 +332,18 @@ namespace Ottfires
         /// </summary>
         /// <param name="firstVar">The first string variable to save.</param>
         /// <param name="secondVar">The second string variable to save.</param>
-        public void SaveVariables(string firstVar, string secondVar) // Corrected typo, using PascalCase and nullable types
+        /// <param name="settingsVariable">The POCSAG settings</param>
+        public void SaveVariables(string firstVar, string secondVar, string settingsVariable) // Corrected typo, using PascalCase and nullable types
         {
             Console.WriteLine($"[VariableManager] Attempting to save variables to '{_filePath}'...");
             try
             {
                 // Prepare the lines to write. Use empty string if null is passed.
-                string[] lines = { firstVar ?? string.Empty, secondVar ?? string.Empty };
+                string[] lines = { 
+                    firstVar ?? string.Empty, 
+                    secondVar ?? string.Empty,
+                    settingsVariable ?? string.Empty
+                };
 
                 // Write the lines to the file.
                 // This will create the file if it doesn't exist,
