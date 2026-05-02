@@ -8,3 +8,13 @@ C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\PDWLogsScanner.csproj.Ge
 C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\PDWLogsScanner.csproj.CoreCompileInputs.cache
 C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\Ottfires.exe
 C:\Users\romde\source\repos\Ottfires\Ottfires\obj\Debug\Ottfires.pdb
+D:\C#Dev\school\PDWLS\PDW-Logs-Scanner\Ottfires\bin\Debug\Ottfires.exe.config
+D:\C#Dev\school\PDWLS\PDW-Logs-Scanner\Ottfires\bin\Debug\Ottfires.exe
+D:\C#Dev\school\PDWLS\PDW-Logs-Scanner\Ottfires\bin\Debug\Ottfires.pdb
+D:\C#Dev\school\PDWLS\PDW-Logs-Scanner\Ottfires\obj\Debug\PDWLogsScanner.csproj.AssemblyReference.cache
+D:\C#Dev\school\PDWLS\PDW-Logs-Scanner\Ottfires\obj\Debug\Ottfires.Form1.resources
+D:\C#Dev\school\PDWLS\PDW-Logs-Scanner\Ottfires\obj\Debug\Ottfires.Properties.Resources.resources
+D:\C#Dev\school\PDWLS\PDW-Logs-Scanner\Ottfires\obj\Debug\PDWLogsScanner.csproj.GenerateResource.cache
+D:\C#Dev\school\PDWLS\PDW-Logs-Scanner\Ottfires\obj\Debug\PDWLogsScanner.csproj.CoreCompileInputs.cache
+D:\C#Dev\school\PDWLS\PDW-Logs-Scanner\Ottfires\obj\Debug\Ottfires.exe
+D:\C#Dev\school\PDWLS\PDW-Logs-Scanner\Ottfires\obj\Debug\Ottfires.pdb

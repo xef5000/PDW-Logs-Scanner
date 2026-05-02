@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,6 +25,7 @@ namespace Ottfires
         private string appToken = "";
         private string groupToken = "";
         VariableManager manager = new VariableManager("tokens.txt");
+        private Dictionary<string, long> lastMessages = new Dictionary<string, long>();
 
 
         /// <summary>
@@ -193,12 +195,14 @@ namespace Ottfires
                     pocsag3CheckBox.Checked = bool.Parse(states[2]);
                 }
             }
+
+            ignoreRepeatedDelay.Value = manager.RepeatedVariable == null ? 0 : int.Parse(manager.RepeatedVariable);
         }
 
         private void saveTokens()
         {
             string settings = $"{pocsag1CheckBox.Checked},{pocsag2CheckBox.Checked},{pocsag3CheckBox.Checked}";
-            manager.SaveVariables(this.appToken, this.groupToken, settings);
+            manager.SaveVariables(this.appToken, this.groupToken, settings, ignoreRepeatedDelay.Value.ToString());
         }
 
         private void groupTokenTextBox_TextChanged(object sender, EventArgs e)
@@ -217,10 +221,10 @@ namespace Ottfires
             scans++;
             updateScanLabel();
             string logs = File.ReadAllText(logFile, Encoding.Default);
-            int size = File.ReadAllText(logFile, Encoding.Default).Length;
+            int size = logs.Length;
             if (size > lastSize)
             {
-                string newText = logs.Substring(lastSize - 1);
+                string newText = logs.Substring(lastSize);
                 List<string> activeProtocols = new List<string>();
                 if (pocsag1CheckBox.Checked) activeProtocols.Add("POCSAG-1");
                 if (pocsag2CheckBox.Checked) activeProtocols.Add("POCSAG-2");
@@ -228,15 +232,38 @@ namespace Ottfires
                 if (activeProtocols.Any(p => newText.Contains(p)))
                 {
                     string pattern = @"512\s+(.*)$";
-                    Match match = Regex.Match(newText, pattern);
-                    if (match.Success)
+                    var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                    foreach (Match match in Regex.Matches(newText, pattern))
                     {
-                        // Group 1 contains all the text after "512"
                         string result = match.Groups[1].Value;
+
+                        if (lastMessages.TryGetValue(result, out var lastTime) &&
+                            now - lastTime <= ignoreRepeatedDelay.Value) continue;
+
                         sendPushOver(result);
+                        lastMessages[result] = now;
                     }
                 }
                 lastSize = size;
+            }
+            ClearLastMessages();
+        }
+
+        private void ignoreRepeatedDelay_ValueChanged(object sender, EventArgs e)
+        {
+            saveTokens();
+        }
+
+        private void ClearLastMessages()
+        {
+            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+
+            foreach (var key in lastMessages
+                .Where(kvp => kvp.Value + ignoreRepeatedDelay.Value <= now)
+                .Select(kvp => kvp.Key)
+                .ToList())
+            {
+                lastMessages.Remove(key);
             }
         }
     }
@@ -248,6 +275,7 @@ namespace Ottfires
         private string _firstVariable; // Using nullable reference types (string?) is good practice in modern .NET
         private string _secondVariable;
         private string _settingsVariable; // POCSAG settings
+        private string _repeatedVariable; // ignore-repeated-delay
 
         // Path to the file used for storage
         private readonly string _filePath;
@@ -257,6 +285,7 @@ namespace Ottfires
         public string FirstVariable => _firstVariable;
         public string SecondVariable => _secondVariable;
         public string SettingsVariable => _settingsVariable;
+        public string RepeatedVariable => _repeatedVariable;
 
         // --- Constructor ---
         /// <summary>
@@ -286,12 +315,13 @@ namespace Ottfires
         /// Loads the two variables from the specified file into the private fields.
         /// If the file doesn't exist or has incorrect format, the fields might remain null or only partially loaded.
         /// </summary>
-        public void GetVariables() // Renamed to follow C# conventions (PascalCase)
+        public void GetVariables()
         {
             // Reset/default values before attempting to read
             _firstVariable = null;
             _secondVariable = null;
             _settingsVariable = null;
+            _repeatedVariable = null;
             Console.WriteLine($"[VariableManager] Attempting to load variables from '{_filePath}'...");
 
             try
@@ -309,7 +339,8 @@ namespace Ottfires
                 // Assign lines to variables if they exist in the file
                 if (lines.Length >= 1) _firstVariable = lines[0];
                 if (lines.Length >= 2) _secondVariable = lines[1];
-                if (lines.Length >= 3) _settingsVariable = lines[2]; // Load 3rd line
+                if (lines.Length >= 3) _settingsVariable = lines[2];
+                if (lines.Length >= 4) _repeatedVariable = lines[3];
                 // Ignore any lines beyond the second one in this simple implementation
             }
             // Catch specific exceptions related to file access
@@ -333,7 +364,8 @@ namespace Ottfires
         /// <param name="firstVar">The first string variable to save.</param>
         /// <param name="secondVar">The second string variable to save.</param>
         /// <param name="settingsVariable">The POCSAG settings</param>
-        public void SaveVariables(string firstVar, string secondVar, string settingsVariable) // Corrected typo, using PascalCase and nullable types
+        /// <param name="repeatedVariable">The ignore-repeated-delay setting</param>
+        public void SaveVariables(string firstVar, string secondVar, string settingsVariable, string repeatedVariable)
         {
             Console.WriteLine($"[VariableManager] Attempting to save variables to '{_filePath}'...");
             try
@@ -342,7 +374,8 @@ namespace Ottfires
                 string[] lines = { 
                     firstVar ?? string.Empty, 
                     secondVar ?? string.Empty,
-                    settingsVariable ?? string.Empty
+                    settingsVariable ?? string.Empty,
+                    repeatedVariable ?? string.Empty
                 };
 
                 // Write the lines to the file.

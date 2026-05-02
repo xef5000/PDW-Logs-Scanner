@@ -45,7 +45,12 @@
             this.pocsag1CheckBox = new System.Windows.Forms.CheckBox();
             this.pocsag2CheckBox = new System.Windows.Forms.CheckBox();
             this.pocsag3CheckBox = new System.Windows.Forms.CheckBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.ignoreRepeatedDelay = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.timerDelay)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ignoreRepeatedDelay)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -103,7 +108,7 @@
             // timerDelay
             // 
             this.timerDelay.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.timerDelay.Location = new System.Drawing.Point(280, 119);
+            this.timerDelay.Location = new System.Drawing.Point(201, 117);
             this.timerDelay.Margin = new System.Windows.Forms.Padding(2);
             this.timerDelay.Maximum = new decimal(new int[] {
             120,
@@ -111,7 +116,7 @@
             0,
             0});
             this.timerDelay.Minimum = new decimal(new int[] {
-            2,
+            1,
             0,
             0,
             0});
@@ -132,15 +137,15 @@
             this.label1.Location = new System.Drawing.Point(6, 122);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(252, 17);
+            this.label1.Size = new System.Drawing.Size(191, 17);
             this.label1.TabIndex = 6;
-            this.label1.Text = "Delay between each scan (in seconds)";
+            this.label1.Text = "Delay between each scan (s)";
             // 
             // scanLabel
             // 
             this.scanLabel.AutoSize = true;
             this.scanLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.scanLabel.Location = new System.Drawing.Point(44, 172);
+            this.scanLabel.Location = new System.Drawing.Point(5, 148);
             this.scanLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.scanLabel.Name = "scanLabel";
             this.scanLabel.Size = new System.Drawing.Size(151, 60);
@@ -149,7 +154,7 @@
             // 
             // appTokenTextBox
             // 
-            this.appTokenTextBox.Location = new System.Drawing.Point(352, 175);
+            this.appTokenTextBox.Location = new System.Drawing.Point(81, 21);
             this.appTokenTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.appTokenTextBox.Name = "appTokenTextBox";
             this.appTokenTextBox.Size = new System.Drawing.Size(212, 20);
@@ -159,7 +164,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(278, 176);
+            this.label2.Location = new System.Drawing.Point(7, 24);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(60, 13);
@@ -169,7 +174,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(278, 207);
+            this.label3.Location = new System.Drawing.Point(5, 53);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(70, 13);
@@ -178,7 +183,7 @@
             // 
             // groupTokenTextBox
             // 
-            this.groupTokenTextBox.Location = new System.Drawing.Point(352, 206);
+            this.groupTokenTextBox.Location = new System.Drawing.Point(81, 53);
             this.groupTokenTextBox.Margin = new System.Windows.Forms.Padding(2);
             this.groupTokenTextBox.Name = "groupTokenTextBox";
             this.groupTokenTextBox.Size = new System.Drawing.Size(212, 20);
@@ -218,18 +223,51 @@
             this.pocsag3CheckBox.UseVisualStyleBackColor = true;
             this.pocsag3CheckBox.CheckedChanged += new System.EventHandler(this.pocsagCheckBox_CheckedChanged);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.appTokenTextBox);
+            this.groupBox1.Controls.Add(this.groupTokenTextBox);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Location = new System.Drawing.Point(267, 158);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(299, 81);
+            this.groupBox1.TabIndex = 15;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Tokens";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(291, 126);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(124, 13);
+            this.label4.TabIndex = 16;
+            this.label4.Text = "Ignore repeated delay (s)";
+            // 
+            // ignoreRepeatedDelay
+            // 
+            this.ignoreRepeatedDelay.Location = new System.Drawing.Point(417, 123);
+            this.ignoreRepeatedDelay.Maximum = new decimal(new int[] {
+            600,
+            0,
+            0,
+            0});
+            this.ignoreRepeatedDelay.Name = "ignoreRepeatedDelay";
+            this.ignoreRepeatedDelay.Size = new System.Drawing.Size(58, 20);
+            this.ignoreRepeatedDelay.TabIndex = 17;
+            this.ignoreRepeatedDelay.ValueChanged += new System.EventHandler(this.ignoreRepeatedDelay_ValueChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(598, 265);
+            this.Controls.Add(this.ignoreRepeatedDelay);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.pocsag3CheckBox);
             this.Controls.Add(this.pocsag2CheckBox);
             this.Controls.Add(this.pocsag1CheckBox);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.groupTokenTextBox);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.appTokenTextBox);
             this.Controls.Add(this.scanLabel);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.timerDelay);
@@ -237,10 +275,14 @@
             this.Controls.Add(this.scanStartButton);
             this.Controls.Add(this.buttonFileDialog);
             this.Controls.Add(this.button1);
+            this.Controls.Add(this.groupBox1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "PDW Logs scanner";
             ((System.ComponentModel.ISupportInitialize)(this.timerDelay)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ignoreRepeatedDelay)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -264,6 +306,9 @@
         private System.Windows.Forms.CheckBox pocsag1CheckBox;
         private System.Windows.Forms.CheckBox pocsag2CheckBox;
         private System.Windows.Forms.CheckBox pocsag3CheckBox;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown ignoreRepeatedDelay;
     }
 }
 
